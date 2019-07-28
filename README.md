@@ -1,6 +1,6 @@
 # GenesisVpn
 
-SuperVPN, total free VPN client.
+Genesis, total free VPN client.
 Easy to use, one click to connecting VPN.
 Unlimited bandwidth and unlimited free trial time.
 
