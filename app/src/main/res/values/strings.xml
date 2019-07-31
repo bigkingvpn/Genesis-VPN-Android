@@ -8,6 +8,7 @@
     <string name="nav_header_title">Genesis VPN</string>
     <string name="nav_header_subtitle">gamesolstudios@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 
     <!-- MENU PAGE -->
 
@@ -20,5 +21,24 @@
     <!-- ABOUT US PAGE -->
 
     <string name="title_activity_about_controller">about_controller</string>
+    <string name="about_homepage">Home Page</string>
+    <string name="about_about_us">About Us</string>
+    <string name="about_description">Genesis VPN, total free VPN client. Easy to use, one click to connecting VPN. Unlimited bandwidth and unlimited free trial time.
+            \n
+            \n•  Protect your privacy
+            \n•  Unblock geographically restricted websites
+            \n•  No registration required, no settings required
+            \n•  No speed limitation, no bandwidth limitation
+            \n•  One-click to connecting VPN
+            \n•  No root access needed
+            \n•  Encrypts your internet traffic
+            \n•  Top server speed and reliability
+            \n•  Using most secure VPN solution
+            \n\nYou can contact us if you have any queries and we shall try to get back to you as soon as possible</string>
+
+    <!-- APPLICATION GENERAL -->
+
+    <string name="todo">TODO</string>
+
 
 </resources>
