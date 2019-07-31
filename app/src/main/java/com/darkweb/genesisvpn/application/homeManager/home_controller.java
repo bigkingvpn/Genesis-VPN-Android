@@ -1,7 +1,8 @@
-package com.darkweb.genesisvpn;
+package com.darkweb.genesisvpn.homeDirectory;
 
 import android.os.Bundle;
 
+import com.darkweb.genesisvpn.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -21,13 +22,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 
-public class app_controller extends AppCompatActivity
+public class home_controller extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_view_controller);
+        setContentView(R.layout.home_activity);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -45,6 +46,9 @@ public class app_controller extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        app_model.getInstance().setAppContext(this);
+        app_model.getInstance().setAppInstance(this);
     }
 
     @Override
@@ -85,14 +89,21 @@ public class app_controller extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
+        if (id == R.id.nav_share)
+        {
+            home_ehandler.getInstance().onShare();
+        }
+        else if (id == R.id.nav_rate)
+        {
+            home_ehandler.getInstance().onRateUs();
+        }
+        else if (id == R.id.nav_contact_us)
+        {
+            home_ehandler.getInstance().contactUS();
+        }
+        else if (id == R.id.nav_about_us)
+        {
+            home_ehandler.getInstance().aboutUS();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
