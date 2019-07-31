@@ -7,7 +7,7 @@
     android:background="@color/colorPrimaryDark"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".application.homeManager.home_controller"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/home_appbar">
 
     <Button
         android:id="@+id/connect_animator"
