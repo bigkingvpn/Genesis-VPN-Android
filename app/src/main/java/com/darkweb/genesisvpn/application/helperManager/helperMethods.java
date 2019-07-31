@@ -1,7 +1,15 @@
 package com.darkweb.genesisvpn.application.helperManager;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.util.TypedValue;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 
@@ -38,5 +46,39 @@ public class helperMethods
         Intent myIntent = new Intent(home_model.getInstance().getHomeInstance(), cls);
         home_model.getInstance().getHomeInstance().startActivity(myIntent);
     }
+
+    public static int screenWidth()
+    {
+        return (Resources.getSystem().getDisplayMetrics().widthPixels);
+    }
+
+    public static void screenToFont(TextView textView, int desiredWidth)
+    {
+        Paint paint = new Paint();
+        Rect bounds = new Rect();
+
+        paint.setTypeface(textView.getTypeface());
+        float textSize = textView.getTextSize();
+        paint.setTextSize(textSize);
+        String text = textView.getText().toString();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+
+        while (bounds.width() > desiredWidth)
+        {
+            textSize--;
+            paint.setTextSize(textSize);
+            paint.getTextBounds(text, 0, text.length(), bounds);
+        }
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize+30);
+    }
+
+    public static RotateAnimation getRotationAnimation(){
+        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,0.5f);
+        rotate.setDuration(2000);
+        rotate.setRepeatCount(Animation.INFINITE);
+        return rotate;
+    }
+
 
 }

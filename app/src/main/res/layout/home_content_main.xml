@@ -7,13 +7,14 @@
     android:background="@color/colorPrimaryDark"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".application.homeManager.home_controller"
-    tools:showIn="@layout/home_appbar">
+    tools:showIn="@layout/home_app_bar">
 
     <Button
         android:id="@+id/connect_animator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@xml/shape_drawable_fader"
+        android:background="@xml/connector_drawable_fader"
+        android:padding="12dp"
         android:text=""
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,59 +22,38 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.437"
-        android:onClick="onStart"
-        android:padding="12dp"/>
+        app:layout_constraintVertical_bias="0.437" />
 
     <Button
         android:id="@+id/connect_base"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@xml/shape_drawable"
-        android:text="GO"
-        android:textSize="75sp"
-        android:textStyle="bold"
+        android:layout_width="331dp"
+        android:layout_height="334dp"
+        android:background="@xml/connector_drawable"
+        android:onClick="onStart"
+        android:padding="12dp"
+        android:text="@string/home_go"
         android:textColor="@color/white"
+        android:textSize="95sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.437"
-        android:onClick="startVPN"
-        android:padding="12dp"/>
+        app:layout_constraintVertical_bias="0.437" />
 
-    <!--
-    <ImageButton
-        android:id="@+id/imageButton2"
+    <ImageView
+        android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-70dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:onClick="startVPN"
-        android:scaleType="fitCenter"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.437"
-        app:srcCompat="@mipmap/power_off" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Loading Please Wait"
-        android:textColor="@color/white"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton2" /> -->
+        app:layout_constraintVertical_bias="0.453"
+        app:srcCompat="@drawable/loading"
+        android:contentDescription="@string/todo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

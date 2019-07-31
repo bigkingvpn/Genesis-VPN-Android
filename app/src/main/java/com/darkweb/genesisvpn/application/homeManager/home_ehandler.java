@@ -2,6 +2,7 @@ package com.darkweb.genesisvpn.application.homeManager;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 
 import com.darkweb.genesisvpn.application.aboutManager.about_controller;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
@@ -36,9 +37,13 @@ class home_ehandler
         helperMethods.sendEmail();
     }
 
-    void aboutUS()
-    {
-        helperMethods.openActivity(about_controller.class);
+    void aboutUS(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                helperMethods.openActivity(about_controller.class);
+            }
+        }, 500);
     }
 
     void onStart()

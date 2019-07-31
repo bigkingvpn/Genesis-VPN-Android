@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class home_controller extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -19,6 +20,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
     Button connect_base;
     Button connect_animator;
+    ImageView connect_loading;
     home_view_controller viewController;
 
     /*INITIALIZATIONS*/
@@ -29,8 +31,8 @@ public class home_controller extends AppCompatActivity implements NavigationView
         setContentView(R.layout.home_view);
 
 
-        initializateViews();
         initializeModel();
+        initializateViews();
         initializeLayout();
     }
 
@@ -54,8 +56,9 @@ public class home_controller extends AppCompatActivity implements NavigationView
     public void initializateViews(){
         connect_base = findViewById(R.id.connect_base);
         connect_animator = findViewById(R.id.connect_animator);
+        connect_loading = findViewById(R.id.loading);
 
-        viewController = new home_view_controller(connect_base,connect_animator);
+        viewController = new home_view_controller(connect_base,connect_animator,connect_loading);
     }
 
     /*EVENT HANDLERS DEFAULTS*/
