@@ -1,38 +1,48 @@
-package com.darkweb.genesisvpn.homeDirectory;
+package com.darkweb.genesisvpn.application.homeManager;
 
 import android.content.Intent;
 import android.net.Uri;
 
-public class home_ehandler
+import com.darkweb.genesisvpn.application.aboutManager.about_controller;
+import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+
+class home_ehandler
 {
+    /*INITIALIZATION*/
+
     private static final home_ehandler ourInstance = new home_ehandler();
 
-    public static home_ehandler getInstance() {
+    static home_ehandler getInstance() {
         return ourInstance;
     }
 
-    private home_ehandler() {
-    }
+    /*HANDLERS*/
 
-    public void onShare()
+    void onShare()
     {
-
+        helperMethods.shareApp();
     }
 
-    public void onRateUs()
+    void onRateUs(){
+        home_model.getInstance().getHomeInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.darkweb.genesissearchengine")));
+    }
+
+    void onQuit(){
+        helperMethods.quit(home_model.getInstance().getHomeInstance());
+    }
+
+    void contactUS()
     {
-        app_model.getInstance().getAppInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.darkweb.genesissearchengine")));
+        helperMethods.sendEmail();
     }
 
-    public void contactUS()
+    void aboutUS()
     {
-
+        helperMethods.openActivity(about_controller.class);
     }
 
-    public void aboutUS()
+    void onStart()
     {
-
+        home_model.getInstance().getHomeInstance().onStartView();
     }
-
-
 }

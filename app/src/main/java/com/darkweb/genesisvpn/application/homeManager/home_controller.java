@@ -1,44 +1,47 @@
-package com.darkweb.genesisvpn.homeDirectory;
+package com.darkweb.genesisvpn.application.homeManager;
 
 import android.os.Bundle;
-
 import com.darkweb.genesisvpn.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.view.View;
-
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-
 import android.view.MenuItem;
-
 import com.google.android.material.navigation.NavigationView;
-
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import android.view.Menu;
+import android.widget.Button;
 
-public class home_controller extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class home_controller extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    /*LOCAL VARIABLE DECLARATION*/
+
+    Button connect_base;
+    Button connect_animator;
+    home_view_controller viewController;
+
+    /*INITIALIZATIONS*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
+
+
+        initializateViews();
+        initializeModel();
+        initializeLayout();
+    }
+
+    public void initializeModel(){
+        home_model.getInstance().setHomeInstance(this);
+    }
+
+    public void initializeLayout(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -46,10 +49,16 @@ public class home_controller extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
-        app_model.getInstance().setAppContext(this);
-        app_model.getInstance().setAppInstance(this);
     }
+
+    public void initializateViews(){
+        connect_base = findViewById(R.id.connect_base);
+        connect_animator = findViewById(R.id.connect_animator);
+
+        viewController = new home_view_controller(connect_base,connect_animator);
+    }
+
+    /*EVENT HANDLERS DEFAULTS*/
 
     @Override
     public void onBackPressed() {
@@ -63,51 +72,60 @@ public class home_controller extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        if (id == R.id.nav_about)
+        {
+            home_ehandler.getInstance().aboutUS();
+        }
         if (id == R.id.nav_share)
         {
             home_ehandler.getInstance().onShare();
+        }
+        else if (id == R.id.nav_help)
+        {
+            home_ehandler.getInstance().contactUS();
         }
         else if (id == R.id.nav_rate)
         {
             home_ehandler.getInstance().onRateUs();
         }
-        else if (id == R.id.nav_contact_us)
+        else if (id == R.id.nav_quit)
         {
-            home_ehandler.getInstance().contactUS();
-        }
-        else if (id == R.id.nav_about_us)
-        {
-            home_ehandler.getInstance().aboutUS();
+            home_ehandler.getInstance().onQuit();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /*EVENT HANDLERS OVERRIDE*/
+
+    public void onStart(View view)
+    {
+        home_ehandler.getInstance().onStart();
+    }
+
+    /*EVENT VIEW REDIRECTIONS*/
+
+    public void onStartView()
+    {
+        viewController.onStartView();
     }
 }

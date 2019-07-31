@@ -2,38 +2,27 @@ package com.darkweb.genesisvpn.application.homeManager;
 
 import android.content.Context;
 
-public class app_model {
+public class home_model {
 
     /*INSTANCE DECLARATIONS*/
 
-    private static final app_model ourInstance = new app_model();
-    public static app_model getInstance() {
+    private static final home_model ourInstance = new home_model();
+    public static home_model getInstance() {
         return ourInstance;
     }
 
     /*INITIALIZATIONS*/
 
-    private Context appContext;
-    private home_controller appInstance;
+    private home_controller homeInstance;
 
     /*INSTANCE GETTERS SETTERS*/
-
-    void setAppContext(Context appContext)
+    public home_controller getHomeInstance()
     {
-        this.appContext = appContext;
+        return homeInstance;
     }
-    public Context getAppContext()
+    void setHomeInstance(home_controller homeInstance)
     {
-        return appContext;
-    }
-
-    public home_controller getAppInstance()
-    {
-        return appInstance;
-    }
-    void setAppInstance(home_controller appInstance)
-    {
-        this.appInstance = appInstance;
+        this.homeInstance = homeInstance;
     }
 
 }

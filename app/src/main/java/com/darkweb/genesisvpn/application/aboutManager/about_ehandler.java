@@ -1,4 +1,4 @@
-package com.darkweb.genesisvpn.application.aboutPage;
+package com.darkweb.genesisvpn.application.aboutManager;
 
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 

@@ -1,4 +1,4 @@
-package com.darkweb.genesisvpn.application.aboutPage;
+package com.darkweb.genesisvpn.application.aboutManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,7 +15,10 @@ public class about_controller extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_view);
+        initializeModel();
+    }
 
+    public void initializeModel(){
         about_model.getInstance().setAboutInstance(this);
     }
 
