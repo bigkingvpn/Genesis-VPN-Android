@@ -6,6 +6,12 @@ import android.view.View;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
+
+import com.darkweb.genesisvpn.application.constants.enums;
+import com.darkweb.genesisvpn.application.constants.strings;
+import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
+import com.darkweb.genesisvpn.application.status.status;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,10 +36,11 @@ public class home_controller extends AppCompatActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_view);
 
-
         initializeModel();
         initializateViews();
         initializeLayout();
+
+        proxy_controller.getInstance().initialization();
     }
 
     public void initializeModel(){
@@ -65,12 +72,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        this.moveTaskToBack(true);
     }
 
     @Override
@@ -125,10 +127,31 @@ public class home_controller extends AppCompatActivity implements NavigationView
         home_ehandler.getInstance().onStart();
     }
 
+    public void onServer(MenuItem item){
+        home_ehandler.getInstance().onServer();
+    }
+
     /*EVENT VIEW REDIRECTIONS*/
 
     public void onStartView()
     {
         viewController.onStartView();
     }
+
+    public void onConnected()
+    {
+        viewController.onConnected();
+    }
+
+    public void onDisConnected()
+    {
+        viewController.onDisConnected();
+    }
+
+    /*ANIMATION VIEW REDIRECTIONS*/
+
+    public void connectLoadingStatus(float status){
+        //viewController.connectLoadingStatus(status);
+    }
 }
+

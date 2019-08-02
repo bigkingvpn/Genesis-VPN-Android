@@ -5,6 +5,9 @@ import android.content.res.Resources;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.TypedValue;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -49,7 +52,17 @@ public class helperMethods
 
     public static int screenWidth()
     {
-        return (Resources.getSystem().getDisplayMetrics().widthPixels);
+        int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int height = Resources.getSystem().getDisplayMetrics().heightPixels;
+
+        if(width>height)
+        {
+            return height;
+        }
+        {
+            return width;
+        }
+
     }
 
     public static void screenToFont(TextView textView, int desiredWidth)
@@ -78,6 +91,13 @@ public class helperMethods
         rotate.setDuration(2000);
         rotate.setRepeatCount(Animation.INFINITE);
         return rotate;
+    }
+
+    public static Spannable getScreenText(float size,String text)
+    {
+        Spannable span = new SpannableString(text);
+        span.setSpan(new RelativeSizeSpan(size), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return span;
     }
 
 

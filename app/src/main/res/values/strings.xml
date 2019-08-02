@@ -8,7 +8,7 @@
     <string name="nav_header_title">Genesis VPN</string>
     <string name="nav_header_subtitle">gamesolstudios@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_servers">Servers</string>
     <string name="home_go">GO</string>
 
     <!-- MENU PAGE -->
@@ -22,7 +22,6 @@
     <!-- ABOUT US PAGE -->
 
     <string name="title_activity_about_controller">about_controller</string>
-    <string name="about_homepage">Home Page</string>
     <string name="about_about_us">About Us</string>
     <string name="about_description">Genesis VPN, total free VPN client. Easy to use, one click to connecting VPN. Unlimited bandwidth and unlimited free trial time.
             \n
@@ -40,6 +39,8 @@
     <!-- APPLICATION GENERAL -->
 
     <string name="todo">TODO</string>
+    <string name="homepage">Home Page</string>
 
+    <!-- SERVER PAGE -->
 
 </resources>

@@ -17,4 +17,9 @@ public class strings
 
     public static String emptySTR = "";
 
+    /*HOME BUTTON*/
+    public static String goText = "GO";
+    public static String connectingText = "Connecting";
+    public static String connectedText = "Connected";
+
 }

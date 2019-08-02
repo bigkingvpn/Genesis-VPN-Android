@@ -3,9 +3,11 @@ package com.darkweb.genesisvpn.application.homeManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.view.View;
 
 import com.darkweb.genesisvpn.application.aboutManager.about_controller;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.serverManager.server_controller;
 
 class home_ehandler
 {
@@ -44,6 +46,15 @@ class home_ehandler
                 helperMethods.openActivity(about_controller.class);
             }
         }, 500);
+    }
+
+    void onServer(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                helperMethods.openActivity(server_controller.class);
+            }
+        }, 200);
     }
 
     void onStart()
