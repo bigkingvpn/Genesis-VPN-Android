@@ -1,7 +1,28 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+
+import com.anchorfree.hydrasdk.HydraSDKConfig;
+import com.anchorfree.hydrasdk.HydraSdk;
+import com.anchorfree.hydrasdk.SessionConfig;
+import com.anchorfree.hydrasdk.api.ClientInfo;
+import com.anchorfree.hydrasdk.api.data.ServerCredentials;
+import com.anchorfree.hydrasdk.callbacks.Callback;
+import com.anchorfree.hydrasdk.dns.DnsRule;
+import com.anchorfree.hydrasdk.exceptions.HydraException;
+import com.anchorfree.hydrasdk.vpnservice.connectivity.NotificationConfig;
+import com.anchorfree.reporting.TrackingConstants;
+import com.crashlytics.android.Crashlytics;
+import com.darkweb.genesisvpn.BuildConfig;
 import com.darkweb.genesisvpn.R;
+
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -10,6 +31,8 @@ import android.view.MenuItem;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.pluginManager.admanager;
+import com.darkweb.genesisvpn.application.pluginManager.preference_manager;
 import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
 import com.darkweb.genesisvpn.application.status.status;
 import com.google.android.material.navigation.NavigationView;
@@ -19,6 +42,10 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import io.fabric.sdk.android.Fabric;
+import java.util.LinkedList;
+import java.util.List;
 
 public class home_controller extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,13 +61,17 @@ public class home_controller extends AppCompatActivity implements NavigationView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.home_view);
 
         initializeModel();
         initializateViews();
         initializeLayout();
 
-        proxy_controller.getInstance().initialization();
+        admanager.getInstance().initialize();
+        preference_manager.getInstance().initialize();
+        proxy_controller.getInstance().startVPN();
+        proxy_controller.getInstance().autoStart();
     }
 
     public void initializeModel(){
@@ -146,6 +177,11 @@ public class home_controller extends AppCompatActivity implements NavigationView
     public void onDisConnected()
     {
         viewController.onDisConnected();
+    }
+
+    public void onConnecting()
+    {
+        viewController.onConnecting();
     }
 
     /*ANIMATION VIEW REDIRECTIONS*/

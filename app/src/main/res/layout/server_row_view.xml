@@ -13,6 +13,7 @@
             android:clickable="true"
             android:layout_width="match_parent"
             android:paddingTop="15dp"
+            android:id="@+id/server"
             android:layout_height="wrap_content"
             android:paddingBottom="16dp"
             android:background="?android:attr/selectableItemBackground"
@@ -22,16 +23,17 @@
         <ImageView
             android:id="@+id/flag"
             android:background="@color/colorPrimary"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="3dp"
             tools:srcCompat="@tools:sample/avatars[0]" />
 
         <LinearLayout
                 android:layout_width="0dp"
                 android:orientation="vertical"
-                android:layout_marginStart="20dp"
                 android:id="@+id/item_container"
+                android:layout_marginStart="35dp"
                 android:paddingEnd="8dp"
                 android:layout_weight="4"
                 android:layout_height="wrap_content">
@@ -49,7 +51,6 @@
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:layout_marginTop="2dp"
                     android:ellipsize="end"
                     android:textSize="15sp"

@@ -6,8 +6,11 @@ import android.os.Handler;
 import android.view.View;
 
 import com.darkweb.genesisvpn.application.aboutManager.about_controller;
+import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.pluginManager.message_manager;
 import com.darkweb.genesisvpn.application.serverManager.server_controller;
+import com.darkweb.genesisvpn.application.status.status;
 
 class home_ehandler
 {
@@ -49,12 +52,19 @@ class home_ehandler
     }
 
     void onServer(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                helperMethods.openActivity(server_controller.class);
-            }
-        }, 200);
+        if(status.servers_loaded == enums.connection_servers.loaded)
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    helperMethods.openActivity(server_controller.class);
+                }
+            }, 200);
+        }
+        else
+        {
+            message_manager.getInstance().serverLoading();
+        }
     }
 
     void onStart()

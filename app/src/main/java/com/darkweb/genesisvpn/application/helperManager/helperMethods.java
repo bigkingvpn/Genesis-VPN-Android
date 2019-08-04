@@ -19,6 +19,8 @@ import androidx.core.app.ShareCompat;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.homeManager.home_model;
 
+import java.util.Locale;
+
 public class helperMethods
 {
     public static void shareApp() {
@@ -100,5 +102,12 @@ public class helperMethods
         return span;
     }
 
+    public static String localeToEmoji(Locale locale)
+    {
+        String countryCode = locale.getCountry();
+        int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+        int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+        return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
+    }
 
 }

@@ -21,5 +21,16 @@ public class strings
     public static String goText = "GO";
     public static String connectingText = "Connecting";
     public static String connectedText = "Connected";
+    public static String stopingText = "Disconnecting";
+
+    /*SERVER LOADING MESSAGE*/
+    public static String server_message_title = "Loading Server Data";
+    public static String server_message_desc = "Please wait while we configure server data for you";
+    public static String server_message_bt1 = "Dismiss";
+
+    public static String permission_title = "Permission Denied";
+    public static String permission_desc = "You need vpn to access this application";
+    public static String permission_bt1 = "Allow Permission";
+    public static String permission_bt2 = "Dismiss";
 
 }

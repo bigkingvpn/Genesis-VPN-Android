@@ -4,7 +4,7 @@ class server_model
 {
     /*INSTANCE DECLARATIONS*/
 
-    private server_controller aboutInstance;
+    private server_controller serverInstance;
 
     /*INITIALIZATIONS*/
 
@@ -16,13 +16,11 @@ class server_model
 
     /*INSTANCE GETTERS SETTERS*/
 
-    server_controller getAboutInstance()
-    {
-        return aboutInstance;
+    server_controller getServerInstance(){
+        return serverInstance;
     }
-    void setServerInstance(server_controller aboutInstance)
-    {
-        this.aboutInstance = aboutInstance;
+    void setServerInstance(server_controller serverInstance){
+        this.serverInstance = serverInstance;
     }
 
 }

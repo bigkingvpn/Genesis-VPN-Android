@@ -5,9 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.darkweb.genesisvpn.R;
+import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
+import com.jwang123.flagkit.FlagKit;
 
 public class list_adapter extends RecyclerView.Adapter<list_adapter.listViewHolder>
 {
@@ -37,6 +40,7 @@ public class list_adapter extends RecyclerView.Adapter<list_adapter.listViewHold
         TextView heaaderText;
         TextView descriptionText;
         ImageView flags;
+        LinearLayout layout;
 
         listViewHolder(View itemView) {
             super(itemView);
@@ -47,9 +51,20 @@ public class list_adapter extends RecyclerView.Adapter<list_adapter.listViewHold
             heaaderText = itemView.findViewById(R.id.header);
             descriptionText = itemView.findViewById(R.id.description);
             flags = itemView.findViewById(R.id.flag);
+            layout = itemView.findViewById(R.id.server);
 
             heaaderText.setText(model.getHeader());
             descriptionText.setText(model.getDescription());
+
+            flags.setBackground(FlagKit.drawableWithFlag(server_model.getInstance().getServerInstance(), model.getCountryModel().getCountry()));
+
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    proxy_controller.getInstance().chooseServer(model.getCountryModel());
+                    server_model.getInstance().getServerInstance().onBackPressed(null);
+                }
+            });
         }
     }
 }

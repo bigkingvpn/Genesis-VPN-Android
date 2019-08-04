@@ -30,18 +30,6 @@ public class server_controller extends AppCompatActivity {
 
     public void initializeModel(){
         server_model.getInstance().setServerInstance(this);
-
-
-        ArrayList<list_row_model> list_items = new ArrayList<>();
-        list_items.add(new list_row_model("Russia","192.215.123","as"));
-        list_items.add(new list_row_model("China","192.215.123","a3"));
-        list_items.add(new list_row_model("Russia","192.215.123","a3"));
-        list_items.add(new list_row_model("China","192.215.123","a3"));
-        list_items.add(new list_row_model("Russia","192.215.123","a3"));
-        list_items.add(new list_row_model("China","192.215.123","a3"));
-        list_items.add(new list_row_model("Russia","192.215.123","a3"));
-        list_items.add(new list_row_model("China","192.215.123","a3"));
-        list_model.getInstance().setModel(list_items);
     }
 
     public void initializeViews(){

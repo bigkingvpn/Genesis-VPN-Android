@@ -17,6 +17,6 @@ class server_ehandler
 
     void quit()
     {
-        helperMethods.quit(server_model.getInstance().getAboutInstance());
+        helperMethods.quit(server_model.getInstance().getServerInstance());
     }
 }

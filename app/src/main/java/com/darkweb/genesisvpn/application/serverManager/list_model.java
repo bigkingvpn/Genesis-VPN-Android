@@ -1,6 +1,11 @@
 package com.darkweb.genesisvpn.application.serverManager;
 
+import com.anchorfree.hydrasdk.api.data.Country;
+import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class list_model
 {
@@ -18,11 +23,15 @@ public class list_model
 
     /*Helper Methods*/
 
-    void setModel(ArrayList<list_row_model> list_model)
-    {
-        this.list_model = list_model;
+    public void setModel(List<Country> countries){
+        for(int counter=0;counter<countries.size();counter++)
+        {
+            Locale obj = new Locale("", countries.get(counter).getCountry());
+            list_row_model row_model = new list_row_model(obj.getDisplayCountry(),"Country Code | "+countries.get(counter).getCountry() + "\nFast Relay Servers | " + countries.get(counter).getServers(),countries.get(counter).getCountry(),countries.get(counter));
+            list_model.add(row_model);
+        }
     }
-    ArrayList<list_row_model> getModel()
+    public ArrayList<list_row_model> getModel()
     {
         return list_model;
     }

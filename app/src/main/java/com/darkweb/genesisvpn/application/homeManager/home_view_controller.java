@@ -6,12 +6,19 @@ import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 
+import com.anchorfree.hydrasdk.HydraSdk;
+import com.anchorfree.hydrasdk.callbacks.Callback;
+import com.anchorfree.hydrasdk.exceptions.HydraException;
+import com.anchorfree.hydrasdk.vpnservice.VPNState;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
@@ -66,7 +73,9 @@ class home_view_controller {
         home_animation.getInstance().beatAnimation(connect_animator);
         home_animation.getInstance().rotateAnimation(connect_loading);
         connect_base.setText(helperMethods.getScreenText(0.6f, strings.goText));
+        status.connection_status = enums.connection_status.unconnected;
         ViewCompat.setTranslationZ(connect_loading, 15);
+        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
         connect_loading.setAlpha(0f);
     }
 
@@ -74,24 +83,42 @@ class home_view_controller {
 
     void onStartView()
     {
-        if(status.connection_status == enums.connection_status.connecting || status.connection_status == enums.connection_status.connected)
+        if(status.connection_status == enums.connection_status.connected)
         {
-            proxy_controller.getInstance().stopVPN();
-            connect_base.setText(helperMethods.getScreenText(0.6f,strings.goText));
+            connect_base.setText(helperMethods.getScreenText(0.001f,strings.goText));
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
             connect_loading.animate().alpha(0);
             status.connection_status = enums.connection_status.unconnected;
+            proxy_controller.getInstance().disConnect();
+        }
+        else if(status.connection_status == enums.connection_status.connecting)
+        {
+            connect_base.setText(helperMethods.getScreenText(0.001f,strings.stopingText));
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
+            connect_loading.animate().alpha(1);
+            status.connection_status = enums.connection_status.stoping;
+            proxy_controller.getInstance().disConnect();
+        }
+        else if(status.connection_status == enums.connection_status.stoping)
+        {
+            connect_base.setText(helperMethods.getScreenText(0.001f,strings.connectingText));
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+            connect_loading.animate().alpha(1);
+            status.connection_status = enums.connection_status.connecting;
         }
         else if(status.connection_status == enums.connection_status.unconnected)
         {
-            proxy_controller.getInstance().startVPN();
-            connect_base.setText(helperMethods.getScreenText(0.25f,strings.connectingText));
+            connect_base.setText(helperMethods.getScreenText(0.001f,strings.connectingText));
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
             connect_loading.animate().alpha(1);
             status.connection_status = enums.connection_status.connecting;
+            proxy_controller.getInstance().connect();
         }
     }
 
     void onConnected()
     {
+        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
         connect_base.setText(helperMethods.getScreenText(0.6f,strings.connectedText));
         connect_loading.animate().alpha(0);
         status.connection_status = enums.connection_status.connected;
@@ -99,11 +126,24 @@ class home_view_controller {
 
     void onDisConnected()
     {
-        connect_base.setText(helperMethods.getScreenText(0.6f,strings.goText));
-        connect_loading.animate().alpha(0);
-        status.connection_status = enums.connection_status.unconnected;
+        if(status.connection_status == enums.connection_status.unconnected)
+        {
+            connect_base.setText(helperMethods.getScreenText(0.001f,strings.goText));
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
+            connect_loading.animate().alpha(0);
+            status.connection_status = enums.connection_status.unconnected;
+            proxy_controller.getInstance().disConnect();
+        }
     }
 
+    void onConnecting()
+    {
+        connect_base.setText(helperMethods.getScreenText(0.001f,strings.connectingText));
+        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        connect_loading.animate().alpha(1);
+        status.connection_status = enums.connection_status.connecting;
+        proxy_controller.getInstance().connect();
+    }
     /*ANIMATION VIEW REDIRECTIONS*/
 
 
