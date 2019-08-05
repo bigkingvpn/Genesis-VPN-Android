@@ -58,12 +58,9 @@ public class list_adapter extends RecyclerView.Adapter<list_adapter.listViewHold
 
             flags.setBackground(FlagKit.drawableWithFlag(server_model.getInstance().getServerInstance(), model.getCountryModel().getCountry()));
 
-            layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    proxy_controller.getInstance().chooseServer(model.getCountryModel());
-                    server_model.getInstance().getServerInstance().onBackPressed(null);
-                }
+            layout.setOnClickListener(view -> {
+                proxy_controller.getInstance().chooseServer(model.getCountryModel());
+                server_model.getInstance().getServerInstance().onBackPressed(null);
             });
         }
     }

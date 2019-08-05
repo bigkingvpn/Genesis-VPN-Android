@@ -9,6 +9,10 @@
             android:icon="@xml/ic_menu_about"
             android:title="@string/menu_about" />
         <item
+            android:id="@+id/server"
+            android:icon="@xml/ic_menu_server"
+            android:title="@string/menu_server" />
+        <item
             android:id="@+id/nav_share"
             android:icon="@xml/ic_menu_share"
             android:title="@string/menu_share" />
@@ -20,6 +24,10 @@
             android:id="@+id/nav_rate"
             android:icon="@xml/ic_menu_rate"
             android:title="@string/menu_rate" />
+        <item
+            android:id="@+id/ic_menu_privacy"
+            android:icon="@xml/ic_menu_privacy"
+            android:title="@string/menu_privacy" />
         <item
             android:id="@+id/nav_quit"
             android:icon="@xml/ic_menu_exit"

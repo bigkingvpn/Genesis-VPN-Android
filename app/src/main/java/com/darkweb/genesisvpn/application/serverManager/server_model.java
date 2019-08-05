@@ -1,6 +1,6 @@
 package com.darkweb.genesisvpn.application.serverManager;
 
-class server_model
+public class server_model
 {
     /*INSTANCE DECLARATIONS*/
 
@@ -10,7 +10,7 @@ class server_model
 
     private static final server_model ourInstance = new server_model();
 
-    static server_model getInstance() {
+    public static server_model getInstance() {
         return ourInstance;
     }
 
@@ -22,5 +22,6 @@ class server_model
     void setServerInstance(server_controller serverInstance){
         this.serverInstance = serverInstance;
     }
+
 
 }

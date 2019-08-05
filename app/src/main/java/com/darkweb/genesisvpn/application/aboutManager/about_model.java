@@ -1,6 +1,6 @@
 package com.darkweb.genesisvpn.application.aboutManager;
 
-class about_model
+public class about_model
 {
     /*INSTANCE DECLARATIONS*/
 
@@ -8,15 +8,15 @@ class about_model
 
     /*INITIALIZATIONS*/
 
-    private static final about_model ourInstance = new about_model();
+    public static final about_model ourInstance = new about_model();
 
-    static about_model getInstance() {
+    public static about_model getInstance() {
         return ourInstance;
     }
 
     /*INSTANCE GETTERS SETTERS*/
 
-    about_controller getAboutInstance()
+    public about_controller getAboutInstance()
     {
         return aboutInstance;
     }

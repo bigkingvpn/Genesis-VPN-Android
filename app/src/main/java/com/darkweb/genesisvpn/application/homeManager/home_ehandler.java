@@ -10,6 +10,7 @@ import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.pluginManager.message_manager;
 import com.darkweb.genesisvpn.application.serverManager.server_controller;
+import com.darkweb.genesisvpn.application.serverManager.server_model;
 import com.darkweb.genesisvpn.application.status.status;
 
 class home_ehandler
@@ -17,6 +18,7 @@ class home_ehandler
     /*INITIALIZATION*/
 
     private static final home_ehandler ourInstance = new home_ehandler();
+    private boolean isUIBlocked = false;
 
     static home_ehandler getInstance() {
         return ourInstance;
@@ -26,7 +28,17 @@ class home_ehandler
 
     void onShare()
     {
-        helperMethods.shareApp();
+        if(!isUIBlocked)
+        {
+            resetUIBlock();
+            isUIBlocked = true;
+            helperMethods.shareApp();
+        }
+    }
+
+    void privacyPolicy()
+    {
+        home_model.getInstance().getHomeInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://infogamesolstudios.blogspot.com/p/privacy-policy-function-var-html5.html")));
     }
 
     void onRateUs(){
@@ -43,32 +55,58 @@ class home_ehandler
     }
 
     void aboutUS(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                helperMethods.openActivity(about_controller.class);
-            }
-        }, 500);
-    }
-
-    void onServer(){
-        if(status.servers_loaded == enums.connection_servers.loaded)
+        if(!isUIBlocked)
         {
+            resetUIBlock();
+            isUIBlocked = true;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    helperMethods.openActivity(server_controller.class);
+
+                    helperMethods.openActivity(about_controller.class);
                 }
-            }, 200);
+            }, 500);
         }
-        else
+    }
+
+    void onServer(){
+        if(!isUIBlocked)
         {
-            message_manager.getInstance().serverLoading();
+            resetUIBlock();
+            isUIBlocked = true;
+            if(status.servers_loaded == enums.connection_servers.loaded)
+            {
+                new Handler().postDelayed(() -> helperMethods.openActivity(server_controller.class), 200);
+            }
+            else
+            {
+                message_manager.getInstance().serverLoading();
+            }
         }
+    }
+
+    private void resetUIBlock()
+    {
+        new Thread()
+        {
+            public void run()
+            {
+                try
+                {
+                    sleep(1000);
+                    isUIBlocked = false;
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
     void onStart()
     {
         home_model.getInstance().getHomeInstance().onStartView();
     }
+
 }

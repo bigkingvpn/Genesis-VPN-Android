@@ -1,51 +1,31 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.anchorfree.hydrasdk.HydraSDKConfig;
-import com.anchorfree.hydrasdk.HydraSdk;
-import com.anchorfree.hydrasdk.SessionConfig;
-import com.anchorfree.hydrasdk.api.ClientInfo;
-import com.anchorfree.hydrasdk.api.data.ServerCredentials;
-import com.anchorfree.hydrasdk.callbacks.Callback;
-import com.anchorfree.hydrasdk.dns.DnsRule;
-import com.anchorfree.hydrasdk.exceptions.HydraException;
-import com.anchorfree.hydrasdk.vpnservice.connectivity.NotificationConfig;
-import com.anchorfree.reporting.TrackingConstants;
 import com.crashlytics.android.Crashlytics;
-import com.darkweb.genesisvpn.BuildConfig;
 import com.darkweb.genesisvpn.R;
 
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
-import com.darkweb.genesisvpn.application.constants.enums;
-import com.darkweb.genesisvpn.application.constants.strings;
-import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.pluginManager.admanager;
 import com.darkweb.genesisvpn.application.pluginManager.preference_manager;
 import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
-import com.darkweb.genesisvpn.application.status.status;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import io.fabric.sdk.android.Fabric;
-import java.util.LinkedList;
-import java.util.List;
 
 public class home_controller extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -53,7 +33,9 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
     Button connect_base;
     Button connect_animator;
+    ImageButton flag;
     ImageView connect_loading;
+    TextView location_info;
     home_view_controller viewController;
 
     /*INITIALIZATIONS*/
@@ -67,11 +49,12 @@ public class home_controller extends AppCompatActivity implements NavigationView
         initializeModel();
         initializateViews();
         initializeLayout();
+        initializeCustomListeners();
 
-        admanager.getInstance().initialize();
         preference_manager.getInstance().initialize();
         proxy_controller.getInstance().startVPN();
         proxy_controller.getInstance().autoStart();
+        admanager.getInstance().initialize();
     }
 
     public void initializeModel(){
@@ -95,8 +78,10 @@ public class home_controller extends AppCompatActivity implements NavigationView
         connect_base = findViewById(R.id.connect_base);
         connect_animator = findViewById(R.id.connect_animator);
         connect_loading = findViewById(R.id.loading);
+        flag = findViewById(R.id.flag);
+        location_info = findViewById(R.id.location_info);
 
-        viewController = new home_view_controller(connect_base,connect_animator,connect_loading);
+        viewController = new home_view_controller(connect_base,connect_animator,connect_loading,flag,location_info);
     }
 
     /*EVENT HANDLERS DEFAULTS*/
@@ -110,6 +95,15 @@ public class home_controller extends AppCompatActivity implements NavigationView
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    public void initializeCustomListeners()
+    {
+        flag.setOnClickListener(view -> {
+            home_ehandler.getInstance().onServer();
+        });
+
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @Override
@@ -129,7 +123,11 @@ public class home_controller extends AppCompatActivity implements NavigationView
         {
             home_ehandler.getInstance().aboutUS();
         }
-        if (id == R.id.nav_share)
+        else if (id == R.id.server)
+        {
+            home_ehandler.getInstance().onServer();
+        }
+        else if (id == R.id.nav_share)
         {
             home_ehandler.getInstance().onShare();
         }
@@ -140,6 +138,10 @@ public class home_controller extends AppCompatActivity implements NavigationView
         else if (id == R.id.nav_rate)
         {
             home_ehandler.getInstance().onRateUs();
+        }
+        else if (id == R.id.ic_menu_privacy)
+        {
+            home_ehandler.getInstance().privacyPolicy();
         }
         else if (id == R.id.nav_quit)
         {
@@ -184,10 +186,16 @@ public class home_controller extends AppCompatActivity implements NavigationView
         viewController.onConnecting();
     }
 
-    /*ANIMATION VIEW REDIRECTIONS*/
-
-    public void connectLoadingStatus(float status){
-        //viewController.connectLoadingStatus(status);
+    public void onSetFlag(String location)
+    {
+        viewController.onSetFlag(location);
     }
+
+    public void onHideFlag()
+    {
+        viewController.onHideFlag();
+    }
+
+
 }
 

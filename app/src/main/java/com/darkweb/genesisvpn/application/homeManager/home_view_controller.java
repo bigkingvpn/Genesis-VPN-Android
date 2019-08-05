@@ -1,29 +1,24 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
-import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
+import android.os.Handler;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
-
-import com.anchorfree.hydrasdk.HydraSdk;
-import com.anchorfree.hydrasdk.callbacks.Callback;
-import com.anchorfree.hydrasdk.exceptions.HydraException;
-import com.anchorfree.hydrasdk.vpnservice.VPNState;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
 import com.darkweb.genesisvpn.application.status.status;
+import com.jwang123.flagkit.FlagKit;
+
+import java.util.Locale;
 
 class home_view_controller {
 
@@ -32,6 +27,8 @@ class home_view_controller {
     private Button connect_base;
     private Button connect_animator;
     private ImageView connect_loading;
+    private TextView location_info;
+    private ImageButton flag;
 
     /*LOCAL VARIABLE DECLARATION*/
 
@@ -40,11 +37,13 @@ class home_view_controller {
 
     /*INITIALIZATIONS*/
 
-    home_view_controller(Button connect_base, Button connect_animator, ImageView connect_loading)
+    home_view_controller(Button connect_base, Button connect_animator, ImageView connect_loading,ImageButton flag,TextView location_info)
     {
         this.connect_base = connect_base;
         this.connect_animator = connect_animator;
         this.connect_loading = connect_loading;
+        this.location_info = location_info;
+        this.flag = flag;
 
         initializeConnectStyles();
     }
@@ -70,13 +69,18 @@ class home_view_controller {
         connect_animator.setLayoutParams(lp);
         connect_loading.setLayoutParams(lp);
 
-        home_animation.getInstance().beatAnimation(connect_animator);
-        home_animation.getInstance().rotateAnimation(connect_loading);
-        connect_base.setText(helperMethods.getScreenText(0.6f, strings.goText));
+        Handler handler = new Handler();
+        handler.post(() -> {
+            home_animation.getInstance().beatAnimation(connect_animator);
+            home_animation.getInstance().rotateAnimation(connect_loading);
+        });
+
+        connect_base.setText(helperMethods.getScreenText(1.1f, strings.goText));
         status.connection_status = enums.connection_status.unconnected;
         ViewCompat.setTranslationZ(connect_loading, 15);
         connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
         connect_loading.setAlpha(0f);
+        flag.setAlpha(0f);
     }
 
     /*EVENT TO VIEW HANDLERS*/
@@ -85,7 +89,7 @@ class home_view_controller {
     {
         if(status.connection_status == enums.connection_status.connected)
         {
-            connect_base.setText(helperMethods.getScreenText(0.001f,strings.goText));
+            connect_base.setText(helperMethods.getScreenText(1.1f,strings.goText));
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
             connect_loading.animate().alpha(0);
             status.connection_status = enums.connection_status.unconnected;
@@ -93,7 +97,7 @@ class home_view_controller {
         }
         else if(status.connection_status == enums.connection_status.connecting)
         {
-            connect_base.setText(helperMethods.getScreenText(0.001f,strings.stopingText));
+            connect_base.setText(helperMethods.getScreenText(0.75f,strings.stopingText));
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
             connect_loading.animate().alpha(1);
             status.connection_status = enums.connection_status.stoping;
@@ -101,14 +105,14 @@ class home_view_controller {
         }
         else if(status.connection_status == enums.connection_status.stoping)
         {
-            connect_base.setText(helperMethods.getScreenText(0.001f,strings.connectingText));
+            connect_base.setText(helperMethods.getScreenText(0.75f,strings.connectingText));
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
             connect_loading.animate().alpha(1);
             status.connection_status = enums.connection_status.connecting;
         }
         else if(status.connection_status == enums.connection_status.unconnected)
         {
-            connect_base.setText(helperMethods.getScreenText(0.001f,strings.connectingText));
+            connect_base.setText(helperMethods.getScreenText(0.75f,strings.connectingText));
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
             connect_loading.animate().alpha(1);
             status.connection_status = enums.connection_status.connecting;
@@ -119,7 +123,7 @@ class home_view_controller {
     void onConnected()
     {
         connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-        connect_base.setText(helperMethods.getScreenText(0.6f,strings.connectedText));
+        connect_base.setText(helperMethods.getScreenText(0.75f,strings.connectedText));
         connect_loading.animate().alpha(0);
         status.connection_status = enums.connection_status.connected;
     }
@@ -128,7 +132,7 @@ class home_view_controller {
     {
         if(status.connection_status == enums.connection_status.unconnected)
         {
-            connect_base.setText(helperMethods.getScreenText(0.001f,strings.goText));
+            connect_base.setText(helperMethods.getScreenText(1.1f,strings.goText));
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
             connect_loading.animate().alpha(0);
             status.connection_status = enums.connection_status.unconnected;
@@ -136,9 +140,30 @@ class home_view_controller {
         }
     }
 
+    void onSetFlag(String location)
+    {
+        if(!location.equals(strings.emptySTR))
+        {
+            if(flag.getAlpha()==0f)
+            {
+                flag.animate().alpha(1);
+            }
+
+            Locale obj = new Locale("", location);
+            flag.setBackground(FlagKit.drawableWithFlag(home_model.getInstance().getHomeInstance(), location));
+            location_info.setText("Powered By | " + obj.getDisplayCountry());
+        }
+    }
+
+    void onHideFlag()
+    {
+        flag.animate().alpha(0);
+        location_info.setText("Unconnected");
+    }
+
     void onConnecting()
     {
-        connect_base.setText(helperMethods.getScreenText(0.001f,strings.connectingText));
+        connect_base.setText(helperMethods.getScreenText(0.75f,strings.connectingText));
         connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
         connect_loading.animate().alpha(1);
         status.connection_status = enums.connection_status.connecting;

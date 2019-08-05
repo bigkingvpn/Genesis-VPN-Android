@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.anchorfree.hydrasdk.HydraSDKConfig;
 import com.anchorfree.hydrasdk.HydraSdk;
 import com.anchorfree.hydrasdk.SessionConfig;
+import com.anchorfree.hydrasdk.SessionInfo;
 import com.anchorfree.hydrasdk.api.AuthMethod;
 import com.anchorfree.hydrasdk.api.ClientInfo;
 import com.anchorfree.hydrasdk.api.data.Country;
@@ -18,6 +19,7 @@ import com.anchorfree.hydrasdk.api.data.ServerCredentials;
 import com.anchorfree.hydrasdk.api.response.User;
 import com.anchorfree.hydrasdk.callbacks.Callback;
 import com.anchorfree.hydrasdk.callbacks.CompletableCallback;
+import com.anchorfree.hydrasdk.compat.CredentialsCompat;
 import com.anchorfree.hydrasdk.dns.DnsRule;
 import com.anchorfree.hydrasdk.exceptions.HydraException;
 import com.anchorfree.hydrasdk.vpnservice.VPNState;
@@ -52,6 +54,7 @@ public class proxy_controller {
 
     private static final String CHANNEL_ID = "vpn";
     private String server_name = strings.emptySTR;
+    private boolean serverChanged = false;
 
     /*HELPER METHODS*/
 
@@ -72,8 +75,21 @@ public class proxy_controller {
                     HydraSdk.stopVPN(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
                         @Override
                         public void complete() {
-                            status.connection_status = enums.connection_status.unconnected;
-                            home_model.getInstance().getHomeInstance().onDisConnected();
+                            Log.i("SUPS1","S1 : " + serverChanged);
+                            if(serverChanged)
+                            {
+                                Log.i("SUPS1","S2");
+                                status.connection_status = enums.connection_status.unconnected;
+                                home_model.getInstance().getHomeInstance().onStartView();
+                            }
+                            else
+                            {
+                                Log.i("SUPS1","S3");
+                                status.connection_status = enums.connection_status.unconnected;
+                                home_model.getInstance().getHomeInstance().onDisConnected();
+                            }
+                            Log.i("SUPS1","S4");
+                            serverChanged = false;
                         }
 
                         @Override
@@ -82,9 +98,12 @@ public class proxy_controller {
                                 status.connection_status = enums.connection_status.unconnected;
                                 home_model.getInstance().getHomeInstance().onDisConnected();
                             }
+                            Log.i("SUPS1","S10 : " + serverChanged);
+                            serverChanged = false;
                         }
                     });
                 }
+                Log.i("SUPS1","S20 : " + serverChanged);
             }
 
             @Override
@@ -93,19 +112,78 @@ public class proxy_controller {
                     status.connection_status = enums.connection_status.unconnected;
                     home_model.getInstance().getHomeInstance().onDisConnected();
                 }
+                Log.i("SUPS1","S30 : " + serverChanged);
+                serverChanged = false;
             }
         });
     }
 
+    protected void getCurrentServer() {
+        HydraSdk.getVpnState(new Callback<VPNState>() {
+            @Override
+            public void success(@NonNull VPNState state) {
+                if (state == VPNState.CONNECTED) {
+                    HydraSdk.getSessionInfo(new Callback<SessionInfo>() {
+                        @Override
+                        public void success(@NonNull SessionInfo sessionInfo) {
+
+                            server_name = CredentialsCompat.getServerCountry(sessionInfo.getCredentials());
+                            setCurrentFlag();
+                        }
+
+                        @Override
+                        public void failure(@NonNull HydraException e) {
+                        }
+                    });
+                } else {
+                }
+            }
+
+            @Override
+            public void failure(@NonNull HydraException e) {
+
+            }
+        });
+    }
+
+    public void forcedExit()
+    {
+            HydraSdk.stopVPN(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
+            @Override
+            public void complete() {
+            }
+
+            @Override
+            public void error(HydraException e) {
+            }
+        });
+
+        //home_model.getInstance().getHomeInstance().stopService(home_model.getInstance().getHomeInstance());
+        //stopService(Intent intent)
+    }
+
     public void chooseServer(Country server)
     {
-        server_name = server.getCountry();
-        //disConnect();
+        if(!server_name.equals(server.getCountry()))
+        {
+            server_name = server.getCountry();
+            if(status.connection_status != enums.connection_status.connected)
+            {
+                status.connection_status = enums.connection_status.unconnected;
+                home_model.getInstance().getHomeInstance().onStartView();
+            }
+            else if(status.connection_status == enums.connection_status.connected)
+            {
+                serverChanged = true;
+                disConnect();
+            }
+            home_model.getInstance().getHomeInstance().onHideFlag();
+        }
+    }
 
-        status.connection_status = enums.connection_status.unconnected;
-        home_model.getInstance().getHomeInstance().onStartView();
-
-
+    public void setCurrentFlag()
+    {
+        home_model.getInstance().getHomeInstance().onSetFlag(server_name);
     }
 
     public void connect() {
@@ -215,6 +293,7 @@ public class proxy_controller {
 
                     if(!server_name.equals(strings.emptySTR))
                     {
+                        //server_name = list_model.getInstance().getModel().get(0).getCountryModel().getCountry();
                         builder.withVirtualLocation(server_name);
                     }
                     SessionConfig build_res = builder.build();
@@ -229,11 +308,12 @@ public class proxy_controller {
                             }
                             else
                             {
+                                getCurrentServer();
                                 admanager.getInstance().showAd();
                                 status.connection_status = enums.connection_status.connected;
                                 home_model.getInstance().getHomeInstance().onConnected();
                             }
-
+                            serverChanged = false;
                         }
 
                         @Override
@@ -242,12 +322,15 @@ public class proxy_controller {
                                 status.connection_status = enums.connection_status.unconnected;
                                 home_model.getInstance().getHomeInstance().onDisConnected();
                             }
+                            serverChanged = false;
                         }
                     });
                 }
                 else
                 {
+                    serverChanged = false;
                 }
+                Log.i("SUPS1","S40 : " + serverChanged);
             }
 
             @Override
@@ -256,6 +339,8 @@ public class proxy_controller {
                     status.connection_status = enums.connection_status.unconnected;
                     home_model.getInstance().getHomeInstance().onDisConnected();
                 }
+                Log.i("SUPS1","S50 : " + serverChanged);
+                serverChanged = false;
             }
         });
     }

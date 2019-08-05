@@ -33,4 +33,8 @@ public class strings
     public static String permission_bt1 = "Allow Permission";
     public static String permission_bt2 = "Dismiss";
 
+    /*ADS MESSAGES*/
+    public static String ads_disabled = "Ads Disabled Successfully";
+    public static String ads_already_disabled = "Ads Already Disabled";
+
 }
