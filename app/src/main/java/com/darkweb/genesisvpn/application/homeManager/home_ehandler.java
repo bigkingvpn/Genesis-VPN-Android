@@ -42,7 +42,7 @@ class home_ehandler
     }
 
     void onRateUs(){
-        home_model.getInstance().getHomeInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.darkweb.genesissearchengine")));
+        home_model.getInstance().getHomeInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.darkweb.genesisvpn")));
     }
 
     void onQuit(){
@@ -59,24 +59,18 @@ class home_ehandler
         {
             resetUIBlock();
             isUIBlocked = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    helperMethods.openActivity(about_controller.class);
-                }
-            }, 500);
+            new Handler().postDelayed(() -> helperMethods.openActivity(about_controller.class), 400);
         }
     }
 
-    void onServer(){
+    void onServer(long delay){
         if(!isUIBlocked)
         {
             resetUIBlock();
             isUIBlocked = true;
             if(status.servers_loaded == enums.connection_servers.loaded)
             {
-                new Handler().postDelayed(() -> helperMethods.openActivity(server_controller.class), 200);
+                new Handler().postDelayed(() -> helperMethods.openActivity(server_controller.class), delay);
             }
             else
             {

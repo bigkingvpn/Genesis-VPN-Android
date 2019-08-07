@@ -13,7 +13,7 @@ public class list_row_model
 
     /*Initializations*/
 
-    public list_row_model(String header, String description,String flag,Country server) {
+    list_row_model(String header, String description, String flag, Country server) {
         this.flag = flag;
         this.header = header;
         this.description = description;
@@ -22,16 +22,16 @@ public class list_row_model
 
     /*Variable Getters*/
 
-    public String getHeader() {
+    String getHeader() {
         return header;
     }
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
     public String getFlag() {
         return flag;
     }
-    public Country getCountryModel() {
+    Country getCountryModel() {
         return server;
     }
 }

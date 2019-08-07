@@ -34,10 +34,11 @@ public class helperMethods
 
     public static void sendEmail()
     {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto","gamesolstudios@gmail.com", null));
         intent.setData(Uri.parse(strings.co_type)); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, "");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"gamesolstudios@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Issue Ticket");
         if (intent.resolveActivity(home_model.getInstance().getHomeInstance().getPackageManager()) != null) {
             home_model.getInstance().getHomeInstance().startActivity(intent);
         }
@@ -64,7 +65,6 @@ public class helperMethods
         {
             return width;
         }
-
     }
 
     public static void screenToFont(TextView textView, int desiredWidth)

@@ -1,6 +1,7 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
 import android.animation.ObjectAnimator;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.TypedValue;
@@ -53,6 +54,7 @@ class home_view_controller {
     private void initializeConnectStyles(){
 
         /*FONTS*/
+        home_model.getInstance().getHomeInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
         int size = helperMethods.screenWidth()*60/100;
 
@@ -75,12 +77,19 @@ class home_view_controller {
             home_animation.getInstance().rotateAnimation(connect_loading);
         });
 
-        connect_base.setText(helperMethods.getScreenText(1.1f, strings.goText));
+        connect_base.setText(strings.goText);
         status.connection_status = enums.connection_status.unconnected;
         ViewCompat.setTranslationZ(connect_loading, 15);
-        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
+        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
         connect_loading.setAlpha(0f);
         flag.setAlpha(0f);
+
+        ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams)flag.getLayoutParams();
+        lp1.width = helperMethods.screenWidth()*19/100;;
+        lp1.height = helperMethods.screenWidth()*14/100;;
+        flag.setLayoutParams(lp1);
+        location_info.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.035f);
+
     }
 
     /*EVENT TO VIEW HANDLERS*/
@@ -89,31 +98,31 @@ class home_view_controller {
     {
         if(status.connection_status == enums.connection_status.connected)
         {
-            connect_base.setText(helperMethods.getScreenText(1.1f,strings.goText));
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
+            connect_base.setText(strings.goText);
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
             connect_loading.animate().alpha(0);
             status.connection_status = enums.connection_status.unconnected;
             proxy_controller.getInstance().disConnect();
         }
         else if(status.connection_status == enums.connection_status.connecting)
         {
-            connect_base.setText(helperMethods.getScreenText(0.75f,strings.stopingText));
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
+            connect_base.setText(strings.stopingText);
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.053f);
             connect_loading.animate().alpha(1);
             status.connection_status = enums.connection_status.stoping;
             proxy_controller.getInstance().disConnect();
         }
         else if(status.connection_status == enums.connection_status.stoping)
         {
-            connect_base.setText(helperMethods.getScreenText(0.75f,strings.connectingText));
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+            connect_base.setText(strings.connectingText);
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.065f);
             connect_loading.animate().alpha(1);
             status.connection_status = enums.connection_status.connecting;
         }
         else if(status.connection_status == enums.connection_status.unconnected)
         {
-            connect_base.setText(helperMethods.getScreenText(0.75f,strings.connectingText));
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+            connect_base.setText(strings.connectingText);
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.065f);
             connect_loading.animate().alpha(1);
             status.connection_status = enums.connection_status.connecting;
             proxy_controller.getInstance().connect();
@@ -122,8 +131,8 @@ class home_view_controller {
 
     void onConnected()
     {
-        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-        connect_base.setText(helperMethods.getScreenText(0.75f,strings.connectedText));
+        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.07f);
+        connect_base.setText(strings.connectedText);
         connect_loading.animate().alpha(0);
         status.connection_status = enums.connection_status.connected;
     }
@@ -132,8 +141,8 @@ class home_view_controller {
     {
         if(status.connection_status == enums.connection_status.unconnected)
         {
-            connect_base.setText(helperMethods.getScreenText(1.1f,strings.goText));
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
+            connect_base.setText(strings.goText);
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
             connect_loading.animate().alpha(0);
             status.connection_status = enums.connection_status.unconnected;
             proxy_controller.getInstance().disConnect();
@@ -163,8 +172,8 @@ class home_view_controller {
 
     void onConnecting()
     {
-        connect_base.setText(helperMethods.getScreenText(0.75f,strings.connectingText));
-        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        connect_base.setText(strings.connectingText);
+        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX,helperMethods.screenWidth()*0.065f);
         connect_loading.animate().alpha(1);
         status.connection_status = enums.connection_status.connecting;
         proxy_controller.getInstance().connect();

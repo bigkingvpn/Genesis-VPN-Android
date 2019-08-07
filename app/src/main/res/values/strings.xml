@@ -10,6 +10,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_servers">Server Location</string>
     <string name="home_go">GO</string>
+    <string name="unconnected_text">Unconnected</string>
 
     <!-- MENU PAGE -->
 

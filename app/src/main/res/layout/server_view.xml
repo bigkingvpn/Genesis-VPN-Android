@@ -10,8 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
         android:layout_gravity="center_vertical"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -19,11 +19,12 @@
             android:id="@+id/home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="11pt"
+            android:layout_gravity="center_vertical"
+            android:padding="3.5dp"
+            android:layout_marginStart="10dp"
             android:layout_marginBottom="0dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/todo"
-            android:layout_gravity="center_vertical"
             android:onClick="onBackPressed"
             android:scaleType="fitCenter"
             android:src="@xml/nav_arrow_back"
@@ -32,13 +33,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="31dp"
+            android:layout_marginStart="30dp"
+            android:textSize="18.5sp"
             android:layout_gravity="center_vertical"
             android:text="@string/homepage"
             android:textColor="@color/white"
-            android:textSize="18.5sp"
             android:textStyle="bold" />
     </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listview"

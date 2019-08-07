@@ -7,7 +7,7 @@ public class strings
     public static String sh_type = "text/plain";
     public static String sh_title = "Hi! Check out this Awesome App";
     public static String sh_subject = "Hi! Check out this Awesome App";
-    public static String sh_desc = "Genesis VPN | Ultimate Security | http://play.google.com/store/apps/details?id";
+    public static String sh_desc = "Genesis VPN | Ultimate Security | https://play.google.com/store/apps/details?id";
 
     /*CONTACT*/
 

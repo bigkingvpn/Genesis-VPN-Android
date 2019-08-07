@@ -118,7 +118,7 @@ public class proxy_controller {
         });
     }
 
-    protected void getCurrentServer() {
+    private void getCurrentServer() {
         HydraSdk.getVpnState(new Callback<VPNState>() {
             @Override
             public void success(@NonNull VPNState state) {
@@ -169,8 +169,18 @@ public class proxy_controller {
             server_name = server.getCountry();
             if(status.connection_status != enums.connection_status.connected)
             {
-                status.connection_status = enums.connection_status.unconnected;
-                home_model.getInstance().getHomeInstance().onStartView();
+                HydraSdk.stopVPN(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
+                    @Override
+                    public void complete() {
+                        status.connection_status = enums.connection_status.unconnected;
+                        home_model.getInstance().getHomeInstance().onStartView();
+                    }
+
+                    @Override
+                    public void error(HydraException e) {
+                    }
+                });
+
             }
             else if(status.connection_status == enums.connection_status.connected)
             {
@@ -181,7 +191,28 @@ public class proxy_controller {
         }
     }
 
-    public void setCurrentFlag()
+    public void onOrientationChanged() {
+
+        isConnected(new Callback<Boolean>()
+        {
+            @Override
+            public void success(@NonNull Boolean aBoolean)
+            {
+                if(aBoolean)
+                {
+                    status.connection_status = enums.connection_status.connected;
+                    home_model.getInstance().getHomeInstance().onConnected();
+                    getCurrentServer();
+                }
+            }
+            @Override
+            public void failure(@NonNull HydraException e)
+            {
+            }
+        });
+    }
+
+    private void setCurrentFlag()
     {
         home_model.getInstance().getHomeInstance().onSetFlag(server_name);
     }
@@ -322,12 +353,22 @@ public class proxy_controller {
                                 status.connection_status = enums.connection_status.unconnected;
                                 home_model.getInstance().getHomeInstance().onDisConnected();
                             }
+                            else if(status.connection_status == enums.connection_status.connected)
+                            {
+                                getCurrentServer();
+                                status.connection_status = enums.connection_status.connected;
+                                home_model.getInstance().getHomeInstance().onConnected();
+                                serverChanged = false;
+                            }
                             serverChanged = false;
                         }
                     });
                 }
                 else
                 {
+                    getCurrentServer();
+                    status.connection_status = enums.connection_status.connected;
+                    home_model.getInstance().getHomeInstance().onConnected();
                     serverChanged = false;
                 }
                 Log.i("SUPS1","S40 : " + serverChanged);
@@ -338,6 +379,13 @@ public class proxy_controller {
                 if(status.connection_status != enums.connection_status.connected) {
                     status.connection_status = enums.connection_status.unconnected;
                     home_model.getInstance().getHomeInstance().onDisConnected();
+                }
+                else if(status.connection_status == enums.connection_status.connected)
+                {
+                    getCurrentServer();
+                    status.connection_status = enums.connection_status.connected;
+                    home_model.getInstance().getHomeInstance().onConnected();
+                    serverChanged = false;
                 }
                 Log.i("SUPS1","S50 : " + serverChanged);
                 serverChanged = false;

@@ -1,6 +1,7 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 
 import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.pluginManager.admanager;
+import com.darkweb.genesisvpn.application.pluginManager.fabricManager;
 import com.darkweb.genesisvpn.application.pluginManager.preference_manager;
 import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
 import com.google.android.material.navigation.NavigationView;
@@ -43,10 +45,10 @@ public class home_controller extends AppCompatActivity implements NavigationView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.home_view);
 
         initializeModel();
+        initializeCrashlytics();
         initializateViews();
         initializeLayout();
         initializeCustomListeners();
@@ -55,6 +57,11 @@ public class home_controller extends AppCompatActivity implements NavigationView
         proxy_controller.getInstance().startVPN();
         proxy_controller.getInstance().autoStart();
         admanager.getInstance().initialize();
+    }
+
+    public void initializeCrashlytics()
+    {
+        fabricManager.getInstance().init();
     }
 
     public void initializeModel(){
@@ -100,10 +107,16 @@ public class home_controller extends AppCompatActivity implements NavigationView
     public void initializeCustomListeners()
     {
         flag.setOnClickListener(view -> {
-            home_ehandler.getInstance().onServer();
+            home_ehandler.getInstance().onServer(50);
         });
 
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        proxy_controller.getInstance().onOrientationChanged();
     }
 
     @Override
@@ -125,7 +138,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
         }
         else if (id == R.id.server)
         {
-            home_ehandler.getInstance().onServer();
+            home_ehandler.getInstance().onServer(400);
         }
         else if (id == R.id.nav_share)
         {
@@ -161,7 +174,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
     }
 
     public void onServer(MenuItem item){
-        home_ehandler.getInstance().onServer();
+        home_ehandler.getInstance().onServer(400);
     }
 
     /*EVENT VIEW REDIRECTIONS*/

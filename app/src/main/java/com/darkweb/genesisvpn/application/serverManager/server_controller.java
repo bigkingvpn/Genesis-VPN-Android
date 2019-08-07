@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 
 import com.darkweb.genesisvpn.R;
+import com.darkweb.genesisvpn.application.aboutManager.about_model;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,7 @@ public class server_controller extends AppCompatActivity {
         initializeModel();
         initializeViews();
         initializeList();
+        server_model.getInstance().getServerInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     public void initializeModel(){
