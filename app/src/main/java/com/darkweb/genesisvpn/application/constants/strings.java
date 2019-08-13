@@ -21,7 +21,7 @@ public class strings
     public static String goText = "GO";
     public static String connectingText = "Connecting";
     public static String connectedText = "Connected";
-    public static String stopingText = "Disconnecting";
+    public static String stopingText = "Terminating";
 
     /*SERVER LOADING MESSAGE*/
     public static String server_message_title = "Loading Server Data";

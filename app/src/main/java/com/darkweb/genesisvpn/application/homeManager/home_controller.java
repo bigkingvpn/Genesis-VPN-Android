@@ -1,5 +1,7 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -7,16 +9,22 @@ import android.os.Bundle;
 import com.crashlytics.android.Crashlytics;
 import com.darkweb.genesisvpn.R;
 
+import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
+import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.pluginManager.admanager;
 import com.darkweb.genesisvpn.application.pluginManager.fabricManager;
 import com.darkweb.genesisvpn.application.pluginManager.preference_manager;
 import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
+import com.darkweb.genesisvpn.application.status.status;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -116,7 +124,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        proxy_controller.getInstance().onOrientationChanged();
+        //proxy_controller.getInstance().onOrientationChanged();
     }
 
     @Override
@@ -177,6 +185,21 @@ public class home_controller extends AppCompatActivity implements NavigationView
         home_ehandler.getInstance().onServer(400);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //proxy_controller.getInstance().onAppResumed();
+        //status.app_status = enums.app_status.resumed;
+        //proxy_controller.getInstance().onUpdateCheck();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //status.app_status = enums.app_status.paused;
+        //proxy_controller.getInstance().onUpdateCheck();
+    }
+
     /*EVENT VIEW REDIRECTIONS*/
 
     public void onStartView()
@@ -199,6 +222,11 @@ public class home_controller extends AppCompatActivity implements NavigationView
         viewController.onConnecting();
     }
 
+    public void onStopping()
+    {
+        viewController.onStopping();
+    }
+
     public void onSetFlag(String location)
     {
         viewController.onSetFlag(location);
@@ -208,7 +236,6 @@ public class home_controller extends AppCompatActivity implements NavigationView
     {
         viewController.onHideFlag();
     }
-
 
 }
 

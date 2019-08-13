@@ -1,9 +1,11 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.os.Message;
 import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import com.darkweb.genesisvpn.application.constants.enums;
+import com.darkweb.genesisvpn.application.constants.messages;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
@@ -35,6 +38,9 @@ class home_view_controller {
 
     private ObjectAnimator scale_connect_animator = null;
     private ObjectAnimator loading_connect_animator = null;
+    private enums.connection_status buttonStatus = enums.connection_status.unconnected;
+    private Handler updateUIHandler = null;
+    private String flag_status = "";
 
     /*INITIALIZATIONS*/
 
@@ -52,6 +58,9 @@ class home_view_controller {
     /*HELPER METHODS*/
 
     private void initializeConnectStyles(){
+
+        /*POST UI HANDLER TASKS*/
+        createUpdateUiHandler();
 
         /*FONTS*/
         home_model.getInstance().getHomeInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
@@ -78,7 +87,6 @@ class home_view_controller {
         });
 
         connect_base.setText(strings.goText);
-        status.connection_status = enums.connection_status.unconnected;
         ViewCompat.setTranslationZ(connect_loading, 15);
         connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
         connect_loading.setAlpha(0f);
@@ -96,56 +104,65 @@ class home_view_controller {
 
     void onStartView()
     {
-        if(status.connection_status == enums.connection_status.connected)
+        if(buttonStatus == enums.connection_status.connected)
         {
-            connect_base.setText(strings.goText);
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
-            connect_loading.animate().alpha(0);
-            status.connection_status = enums.connection_status.unconnected;
-            proxy_controller.getInstance().disConnect();
+            onStopping();
+            proxy_controller.getInstance().disconnectConnection();
+            buttonStatus = enums.connection_status.stoping;
         }
-        else if(status.connection_status == enums.connection_status.connecting)
+        else if(buttonStatus == enums.connection_status.connecting)
         {
             connect_base.setText(strings.stopingText);
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.053f);
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.065f);
             connect_loading.animate().alpha(1);
-            status.connection_status = enums.connection_status.stoping;
-            proxy_controller.getInstance().disConnect();
+            status.connection_status = enums.connection_status.unconnected;
+            buttonStatus = enums.connection_status.stoping;
         }
-        else if(status.connection_status == enums.connection_status.stoping)
+        else if(buttonStatus == enums.connection_status.stoping)
         {
             connect_base.setText(strings.connectingText);
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.065f);
             connect_loading.animate().alpha(1);
-            status.connection_status = enums.connection_status.connecting;
+            status.connection_status = enums.connection_status.reconnecting;
+            buttonStatus = enums.connection_status.connecting;
         }
-        else if(status.connection_status == enums.connection_status.unconnected)
+        else if(buttonStatus == enums.connection_status.unconnected)
         {
             connect_base.setText(strings.connectingText);
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.065f);
             connect_loading.animate().alpha(1);
-            status.connection_status = enums.connection_status.connecting;
-            proxy_controller.getInstance().connect();
+            status.connection_status = enums.connection_status.connected;
+            buttonStatus = enums.connection_status.connecting;
+        }
+    }
+
+    void onStopping()
+    {
+        if(buttonStatus != enums.connection_status.stoping) {
+            buttonStatus = enums.connection_status.stoping;
+            connect_loading.animate().alpha(1);
+            connect_base.setText(strings.stopingText);
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * 0.065f);
         }
     }
 
     void onConnected()
     {
-        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.07f);
-        connect_base.setText(strings.connectedText);
-        connect_loading.animate().alpha(0);
-        status.connection_status = enums.connection_status.connected;
+        if(buttonStatus != enums.connection_status.connected) {
+            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * 0.065f);
+            connect_base.setText(strings.connectedText);
+            connect_loading.animate().alpha(0);
+            buttonStatus = enums.connection_status.connected;
+        }
     }
 
     void onDisConnected()
     {
-        if(status.connection_status == enums.connection_status.unconnected)
-        {
+        if(buttonStatus != enums.connection_status.unconnected) {
             connect_base.setText(strings.goText);
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
             connect_loading.animate().alpha(0);
-            status.connection_status = enums.connection_status.unconnected;
-            proxy_controller.getInstance().disConnect();
+            buttonStatus = enums.connection_status.unconnected;
         }
     }
 
@@ -153,14 +170,8 @@ class home_view_controller {
     {
         if(!location.equals(strings.emptySTR))
         {
-            if(flag.getAlpha()==0f)
-            {
-                flag.animate().alpha(1);
-            }
-
-            Locale obj = new Locale("", location);
-            flag.setBackground(FlagKit.drawableWithFlag(home_model.getInstance().getHomeInstance(), location));
-            location_info.setText("Powered By | " + obj.getDisplayCountry());
+            flag_status = location;
+            startPostTask(messages.UPDATE_FLAG);
         }
     }
 
@@ -175,10 +186,45 @@ class home_view_controller {
         connect_base.setText(strings.connectingText);
         connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX,helperMethods.screenWidth()*0.065f);
         connect_loading.animate().alpha(1);
-        status.connection_status = enums.connection_status.connecting;
-        proxy_controller.getInstance().connect();
+        buttonStatus = enums.connection_status.connecting;
     }
     /*ANIMATION VIEW REDIRECTIONS*/
 
+
+    /*POST UI TASKS*/
+
+    public void startPostTask(int m_id)
+    {
+        Message message = new Message();
+        message.what = m_id;
+        updateUIHandler.sendMessage(message);
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void createUpdateUiHandler()
+    {
+               updateUIHandler = new Handler()
+        {
+            @Override
+            public void handleMessage(Message msg)
+            {
+                if(msg.what == messages.UPDATE_FLAG)
+                {
+                    if(!flag_status.equals(strings.emptySTR))
+                    {
+                        if(flag.getAlpha()==0f)
+                        {
+                            flag.animate().alpha(1);
+                        }
+
+                        Locale obj = new Locale("", flag_status);
+
+                        flag.setBackground(FlagKit.drawableWithFlag(home_model.getInstance().getHomeInstance(), flag_status));
+                        location_info.setText("Powered By | " + obj.getDisplayCountry());
+                    }
+                }
+            }
+        };
+    }
 
 }

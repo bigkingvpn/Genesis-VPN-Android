@@ -24,8 +24,8 @@ public class fabricManager
 
     public void init()
     {
-        Fabric.with(home_model.getInstance().getHomeInstance(), new Crashlytics());
-        analyticmanager.getInstance().initialize(home_model.getInstance().getHomeInstance());
-        analyticmanager.getInstance().logUser();
+        //Fabric.with(home_model.getInstance().getHomeInstance(), new Crashlytics());
+        //analyticmanager.getInstance().initialize(home_model.getInstance().getHomeInstance());
+        //analyticmanager.getInstance().logUser();
     }
 }
