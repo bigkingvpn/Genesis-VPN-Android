@@ -23,12 +23,12 @@ public class OnClearFromRecentService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        proxy_controller.getInstance().disconnectConnection();
+        proxy_controller.getInstance().closeService();
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         stopSelf();
-        proxy_controller.getInstance().disconnectConnection();
+        proxy_controller.getInstance().closeService();
     }
 }

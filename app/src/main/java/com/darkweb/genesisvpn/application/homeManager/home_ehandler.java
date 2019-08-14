@@ -9,6 +9,7 @@ import com.darkweb.genesisvpn.application.aboutManager.about_controller;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.pluginManager.message_manager;
+import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
 import com.darkweb.genesisvpn.application.serverManager.server_controller;
 import com.darkweb.genesisvpn.application.serverManager.server_model;
 import com.darkweb.genesisvpn.application.status.status;
@@ -46,7 +47,9 @@ class home_ehandler
     }
 
     void onQuit(){
+        proxy_controller.getInstance().closeService();
         helperMethods.quit(home_model.getInstance().getHomeInstance());
+        home_model.getInstance().getHomeInstance().moveTaskToBack(true);
     }
 
     void contactUS()

@@ -66,13 +66,14 @@ public class proxy_controller {
 
     public void autoStart()
     {
-        //  if(!preference_manager.getInstance().getBool(keys.app_initialized_key,false))
-        //  {
-        //      home_model.getInstance().getHomeInstance().onStartView();
-        //  }
-
         stateManager();
         stateUIUpdater();
+
+        if(!preference_manager.getInstance().getBool(keys.app_initialized_key,false))
+        {
+            preference_manager.getInstance().setBool(keys.app_initialized_key,true);
+            home_model.getInstance().getHomeInstance().onStartView();
+        }
     }
 
     private void stateUIUpdater()
@@ -100,12 +101,12 @@ public class proxy_controller {
                 else if(vpnState.name().equals("PAUSED") || vpnState.name().equals("CONNECTING_VPN") || vpnState.name().equals("CONNECTING_PERMISSIONS"))
                 {
                     home_model.getInstance().getHomeInstance().onConnecting();
-                    isLoading = false;
+                    //status.connection_status = enums.connection_status.no_status;
                 }
                 else if(vpnState.name().equals("DISCONNECTINGN"))
                 {
                     home_model.getInstance().getHomeInstance().onStopping();
-                    isLoading = false;
+                    //status.connection_status = enums.connection_status.no_status;
                 }
             }
 
@@ -267,6 +268,22 @@ public class proxy_controller {
         isLoading = false;
     }
 
+    public void closeService()
+    {
+            isLoading = true;
+            status.connection_status = enums.connection_status.no_status;
+            HydraSdk.stopVPN(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
+            @Override
+            public void complete() {
+            }
+
+            @Override
+            public void error(HydraException e) {
+            }
+        });
+    }
+
+
     public void disconnectConnection() {
 
         HydraSdk.stopVPN(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
@@ -340,13 +357,13 @@ public class proxy_controller {
 
     public void chooseServer(Country server)
     {
-        if(!server_name.equals(server.getCountry()))
-        {
+        //if(!server_name.equals(server.getCountry()))
+        //{
             server_name = server.getCountry();
             isLoading = true;
             status.connection_status = enums.connection_status.restarting;
             disconnectConnection();
-        }
+        //}
 
     }
 
