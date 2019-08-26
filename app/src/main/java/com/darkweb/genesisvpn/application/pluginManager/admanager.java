@@ -54,7 +54,7 @@ public class admanager
         bannerAds = home_model.getInstance().getHomeInstance().findViewById(R.id.adView);
         AdRequest request = new AdRequest.Builder()
                 .build();
-        bannerAds.loadAd(request );
+        bannerAds.loadAd(request);
     }
 
     private InterstitialAd initAd(String id)
